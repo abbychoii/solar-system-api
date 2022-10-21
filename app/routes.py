@@ -34,3 +34,43 @@ def get_all_planets():
         response.append(planet_dict)
         
     return jsonify(response), 200
+
+@planets_bp.route("/name/<planet_name>", methods=["GET"])
+def get_planet_by_name(planet_name):
+    if planet_name.isalpha():
+        planet_name = planet_name.capitalize()
+        for planet in solar_system:
+            if planet_name == planet.name:
+                return {
+                    "id": planet.id,
+                    "name": planet.name,
+                    "description": planet.description,
+                    "moons": planet.moon
+                }, 200
+                # response = {
+                #     "id": planet.id,
+                #     "name": planet.name,
+                #     "description": planet.description,
+                #     "moons": planet.moon
+                # }
+                # return jsonify(response), 200
+        return {"message": f"planet {planet_name} not found"}, 404 #isalpha not found
+    return {"message": f"{planet_name} invalid, not alpha"}, 400 #not alpha can't check
+
+@planets_bp.route("/id/<planet_id>", methods=["GET"])
+def get_planet_by_id(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except:
+        return jsonify(f"invalid planet id: {planet_id}. ID must be an integer")
+    
+    for planet in solar_system:
+        if planet.id == planet_id:
+            return {
+                    "id": planet.id,
+                    "name": planet.name,
+                    "description": planet.description,
+                    "moons": planet.moon
+                }, 200
+    response_message = f"Could not find planet with ID {planet_id}"
+    return jsonify({"message": response_message}), 404

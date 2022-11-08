@@ -120,6 +120,7 @@ def read_planet():
     for planet in planets:
         planets_response.append({
             "id": planet.id,
+            "name": planet.name,
             "description": planet.description,
             "moons": planet.moon
         })
